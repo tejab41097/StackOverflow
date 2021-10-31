@@ -11,12 +11,16 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.tejas.stackoverflow.R
 import com.tejas.stackoverflow.databinding.FragmentListBinding
 import com.tejas.stackoverflow.model.Question
 import com.tejas.stackoverflow.ui.adapter.QuestionAdapter
 import com.tejas.stackoverflow.viewmodel.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ListFragment : Fragment(), QuestionAdapter.ItemClickListener {
 
@@ -28,6 +32,10 @@ class ListFragment : Fragment(), QuestionAdapter.ItemClickListener {
     private var listBeforeSearch = mutableListOf<Question?>()
     private var navController: NavController? = null
     private var selectedFilter = ""
+
+    // LiveData used to do calculations on IO thread
+    private val answerCountLiveData = MutableLiveData<Double>()
+    private val viewCountLiveData = MutableLiveData<Double>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +61,15 @@ class ListFragment : Fragment(), QuestionAdapter.ItemClickListener {
         mainViewModel.getSelectedFilter().observe(viewLifecycleOwner) {
             selectedFilter = it
             setRecyclerViewOrShowPopup(listBeforeSearch)
+        }
+
+        answerCountLiveData.observe(viewLifecycleOwner) {
+            binding.tvAvgAnswerCount.text =
+                getString(R.string.average_answer_count, it)
+        }
+        viewCountLiveData.observe(viewLifecycleOwner) {
+            binding.tvAvgViewCount.text =
+                getString(R.string.average_view_count, it)
         }
     }
 
@@ -122,9 +139,30 @@ class ListFragment : Fragment(), QuestionAdapter.ItemClickListener {
         if (list.isEmpty()) {
             binding.rvQuestions.isVisible = false
             binding.tvNoResultsFound.isVisible = true
+            binding.tvAvgAnswerCount.isVisible = false
+            binding.tvAvgViewCount.isVisible = false
         } else {
             binding.rvQuestions.isVisible = true
             binding.tvNoResultsFound.isVisible = false
+            binding.tvAvgAnswerCount.isVisible = true
+            binding.tvAvgViewCount.isVisible = true
+            countAnswersAndViews(list)
+        }
+    }
+
+    private fun countAnswersAndViews(list: MutableList<Question?>) {
+        CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
+            var answerCount = 0.toDouble()
+            var viewCount = 0.toDouble()
+            list.forEach {
+                it?.let {
+                    answerCount += it.answer_count
+                    viewCount += it.view_count
+                }
+            }
+
+            viewCountLiveData.postValue(viewCount / list.size)
+            answerCountLiveData.postValue(answerCount / list.size)
         }
     }
 
