@@ -16,11 +16,32 @@ class MainViewModel @Inject constructor(
     private val mainRepository: MainRepository
 ) : ViewModel() {
     private var liveData = MutableLiveData<QuestionListResponse>()
+    private var selectedFilter = MutableLiveData<String>()
+    private val filterListMutLiveData = MutableLiveData<MutableList<String>>()
+    val filterListLiveData get() = filterListMutLiveData
 
+    fun setSelectedFilter(text: String) {
+        selectedFilter.postValue(text)
+    }
+
+    fun getSelectedFilter() = selectedFilter
+
+    fun setFilterList(list: MutableList<Question?>) {
+        val tempFilterList = mutableListOf<String>()
+        list.forEach {
+            it?.tags?.forEach { tag ->
+                if (!tempFilterList.contains(tag))
+                    tempFilterList.add(tag)
+            }
+        }
+
+        filterListMutLiveData.postValue(tempFilterList)
+    }
 
     fun getQuestionList(): LiveData<QuestionListResponse> {
         viewModelScope.launch(Dispatchers.IO) {
             mainRepository.getQuestionList().collect {
+                setFilterList(it.items)
                 liveData.postValue(addAdvertisements(it))
             }
         }

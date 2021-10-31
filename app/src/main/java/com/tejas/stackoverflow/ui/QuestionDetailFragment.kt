@@ -22,7 +22,13 @@ class QuestionDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as MainActivity).viewBindingMainActivity.toolbar.title =
+            requireArguments().getString("title")
 
+        var url = requireArguments().getString("URL")
+        if (url == null)
+            url = "https://www.google.com/search?q=advertisement"
+        binding.webView.loadUrl(url)
     }
 
 }

@@ -18,6 +18,8 @@ class QuestionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var list = mutableListOf<Question?>()
 
+    var itemClickListener: ItemClickListener? = null
+
     override fun getItemViewType(position: Int): Int {
         return if (list[position] == null)
             ADVERTISE
@@ -51,8 +53,11 @@ class QuestionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             questionBinding.tvDate.text = list[position]?.creation_date?.getDateTime()
             questionBinding.tvTitle.text = list[position]?.title
             questionBinding.tvDescription.text = list[position]?.owner?.display_name
-
-
+            questionBinding.root.setOnClickListener {
+                list[position]?.let { question ->
+                    itemClickListener?.onItemClicked(question)
+                }
+            }
         }
 
     }
@@ -81,4 +86,8 @@ class QuestionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
+
+    interface ItemClickListener {
+        fun onItemClicked(question: Question)
+    }
 }

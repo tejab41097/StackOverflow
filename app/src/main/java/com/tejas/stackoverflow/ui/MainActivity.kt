@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.NavigationUI
 import com.tejas.stackoverflow.R
 import com.tejas.stackoverflow.databinding.ActivityMainBinding
 import com.tejas.stackoverflow.di.MainActivityComponent
@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
             (supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment).navController
         navController.navigate(R.id.navigation_splash)
         setSupportActionBar(viewBindingMainActivity.toolbar)
-        setupActionBarWithNavController(navController)
+        NavigationUI.setupWithNavController(viewBindingMainActivity.toolbar, navController)
+
     }
 }

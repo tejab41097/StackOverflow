@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.tejas.stackoverflow.R
 import com.tejas.stackoverflow.databinding.FragmentSplashBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +32,7 @@ class SplashFragment : Fragment() {
         (requireActivity() as MainActivity).viewBindingMainActivity.toolbar.isVisible = false
         CoroutineScope(Dispatchers.Main).launch {
             delay(2000)
-            findNavController().navigate(R.id.navigation_list)
+            findNavController().popBackStack()
         }
     }
 

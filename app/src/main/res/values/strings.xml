@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">StackOverflow</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="questions">Questions</string>
     <string name="advertisement">Advertisement</string>
     <string name="logo">Logo</string>
+    <string name="search">Search</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="clear_filter">Clear Filter</string>
 </resources>
