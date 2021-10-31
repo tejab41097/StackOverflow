@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import com.tejas.stackoverflow.R
@@ -115,8 +116,13 @@ class ListFragment : Fragment(), QuestionAdapter.ItemClickListener {
 
     private fun setRecyclerViewOrShowPopup(list: MutableList<Question?>) {
         questionAdapter.setData(filterSearch(list))
-//        if (list.isEmpty())
-//            showSnackBar(getString(R.string.no_results_found), false)
+        if (list.isEmpty()) {
+            binding.rvQuestions.isVisible = false
+            binding.tvNoResultsFound.isVisible = true
+        } else {
+            binding.rvQuestions.isVisible = true
+            binding.tvNoResultsFound.isVisible = false
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
