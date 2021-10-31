@@ -46,8 +46,8 @@ class ListFragment : Fragment(), QuestionAdapter.ItemClickListener {
         mainViewModel = (requireActivity() as MainActivity).mainViewModel
         navController = (requireActivity() as MainActivity).navController
         mainViewModel.getQuestionList().observe(viewLifecycleOwner) {
-            setRecyclerViewOrShowPopup(it.items)
-            listBeforeSearch = it.items
+            setRecyclerViewOrShowPopup(it)
+            listBeforeSearch = it
         }
 
         mainViewModel.getSelectedFilter().observe(viewLifecycleOwner) {
@@ -67,8 +67,8 @@ class ListFragment : Fragment(), QuestionAdapter.ItemClickListener {
         val searchView = searchItem?.actionView as SearchView
         searchView.setOnCloseListener {
             mainViewModel.getQuestionList().value?.let {
-                listBeforeSearch = it.items
-                setRecyclerViewOrShowPopup(it.items)
+                listBeforeSearch = it
+                setRecyclerViewOrShowPopup(it)
             }
             true
         }
