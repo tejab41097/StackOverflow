@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/navigation_list">
+
+    <fragment
+        android:id="@+id/navigation_splash"
+        android:name="com.tejas.stackoverflow.ui.SplashFragment"
+        tools:layout="@layout/fragment_splash" />
+
+    <fragment
+        android:id="@+id/navigation_list"
+        android:name="com.tejas.stackoverflow.ui.ListFragment"
+        android:label="@string/questions"
+        tools:layout="@layout/fragment_list" />
+
+    <fragment
+        android:id="@+id/navigation_question_detail"
+        android:name="com.tejas.stackoverflow.ui.QuestionDetailFragment"
+        tools:layout="@layout/fragment_question_detail" />
+
+</navigation>
