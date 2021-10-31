@@ -2,8 +2,11 @@ package com.tejas.stackoverflow.ui
 
 import android.app.SearchManager
 import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -133,11 +136,21 @@ class ListFragment : Fragment(), QuestionAdapter.ItemClickListener {
     }
 
     override fun onItemClicked(question: Question) {
-        navController?.navigate(
-            R.id.navigation_question_detail,
-            bundleOf("URL" to question.link, "title" to question.title)
-        )
+        if (isNetworkConnected())
+            navController?.navigate(
+                R.id.navigation_question_detail,
+                bundleOf("URL" to question.link, "title" to question.title)
+            )
+        else
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.no_internet_connection),
+                Toast.LENGTH_LONG
+            ).show()
     }
 
-
+    private fun isNetworkConnected() =
+        (requireActivity().getSystemService(AppCompatActivity.CONNECTIVITY_SERVICE) as ConnectivityManager).let {
+            it.activeNetworkInfo != null && it.activeNetworkInfo!!.isConnected
+        }
 }
